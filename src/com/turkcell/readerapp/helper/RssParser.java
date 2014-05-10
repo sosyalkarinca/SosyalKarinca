@@ -41,14 +41,19 @@ public class RssParser {
                   String desc = xpp.nextText();
                   rss.setContent(desc);
 
-                  Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)", Pattern.CASE_INSENSITIVE);
-                  Matcher m = p.matcher(desc);
-                  String srcUrl = null;
-                  while (m.find()) {
-                     srcUrl = m.group(1);
-                     rss.setImageUrl(srcUrl.toString().trim());
-                  }
                }
+               else if ("content:encoded".equals(tagName)) {
+                   String desc = xpp.nextText();
+                   rss.setContent(desc);
+
+                   Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)", Pattern.CASE_INSENSITIVE);
+                   Matcher m = p.matcher(desc);
+                   String srcUrl = null;
+                   while (m.find()) {
+                      srcUrl = m.group(1);
+                      rss.setImageUrl(srcUrl.toString().trim());
+                   }
+                }
                else if ("dc:date".equals(tagName)) {
                   rss.setPostDate(xpp.nextText());
                }

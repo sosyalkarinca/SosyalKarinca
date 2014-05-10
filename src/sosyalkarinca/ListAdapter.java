@@ -3,10 +3,11 @@ package sosyalkarinca;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -46,11 +47,15 @@ public class ListAdapter extends BaseAdapter {
 
 		Rss rss = (Rss) data.get(position);
 		TextView titleView = (TextView) cellView.findViewById(R.id.rss_title);
-		TextView contentView = (TextView) cellView
-				.findViewById(R.id.rss_content);
-
 		titleView.setText(rss.getTitle());
-		contentView.setText(rss.getContent());
+		
+		WebView webview = (WebView) cellView.findViewById(R.id.rss_content);
+		webview.getSettings().setJavaScriptEnabled(true);
+		webview.setFocusable(false);
+		webview.loadDataWithBaseURL("", rss.getContent(), "text/html", "UTF-8",
+				"");
+
+		Log.d("List", rss.getImageUrl());
 
 		return cellView;
 	}

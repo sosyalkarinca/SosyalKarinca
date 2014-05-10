@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="vertical" >
 
     <TextView
@@ -16,10 +17,10 @@
         android:singleLine="true"
         android:textSize="18sp" />
 
-    <TextView
+    <WebView
         android:id="@+id/rss_content"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_margin="5dp"
         android:lines="10"
         android:paddingLeft="30dp"
@@ -27,14 +28,5 @@
         android:singleLine="false"
         android:textColor="@android:color/black"
         android:textSize="14sp" />
-
-    <ImageView
-        android:id="@+id/rss_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="4dp"
-        android:contentDescription="@string/app_name"
-        android:paddingLeft="36dp" />
 
 </LinearLayout>

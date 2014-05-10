@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -22,24 +23,22 @@ import com.turkcell.readerapp.model.Rss;
 public class MainActivity extends Activity implements OnItemClickListener,
 		OnClickListener {
 
-	List<Rss> eventList;
-	List<Rss> specialList;
+	private List<Rss> events;
 
 	private class FeedTask extends AsyncTask<Void, Void, List> {
-		
+
 		private ProgressDialog pDialog;
-		
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 			pDialog = new ProgressDialog(MainActivity.this);
 			pDialog.setTitle("Sosyal Karinca");
 			pDialog.setMessage("Yukleniyor...");
-			if(pDialog != null) {
+			if (pDialog != null) {
 				pDialog.show();
 			}
 		}
-		
 
 		@Override
 		protected List doInBackground(Void... params) {
@@ -54,16 +53,16 @@ public class MainActivity extends Activity implements OnItemClickListener,
 		protected void onPostExecute(List result) {
 			super.onPostExecute(result);
 
+			events = result;
+
 			ListView ozelList = (ListView) findViewById(R.id.ozelGunlerList);
 			ListAdapter adapter = new ListAdapter(result,
 					getApplicationContext());
 			ozelList.setAdapter(adapter);
-			if(pDialog != null) {
+			if (pDialog != null) {
 				pDialog.dismiss();
 			}
-
 		}
-
 	}
 
 	@Override
@@ -79,6 +78,9 @@ public class MainActivity extends Activity implements OnItemClickListener,
 		Button button3 = (Button) findViewById(R.id.button3);
 		button3.setOnClickListener(this);
 
+		ListView ozelList = (ListView) findViewById(R.id.ozelGunlerList);
+		ozelList.setOnItemClickListener(this);
+
 		new FeedTask().execute();
 
 	}
@@ -86,6 +88,11 @@ public class MainActivity extends Activity implements OnItemClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View listView,
 			int position, long id) {
+
+		Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+		Rss rss = events.get(position);
+		intent.putExtra("url", rss.getOriginalPostUrl());
+		startActivity(intent);
 
 	}
 
