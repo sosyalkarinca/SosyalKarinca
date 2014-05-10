@@ -1,10 +1,14 @@
 package sosyalkarinca;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +21,16 @@ import com.turkcell.readerapp.helper.Downloader;
 import com.turkcell.readerapp.helper.RssParser;
 
 public class EventActivity extends Activity implements OnClickListener {
+
+	public static String concatStringsWSep(Set<String> strings, String separator) {
+		StringBuilder sb = new StringBuilder();
+		String sep = "";
+		for (String s : strings) {
+			sb.append(sep).append(s);
+			sep = separator;
+		}
+		return sb.toString();
+	}
 
 	private class FeedTask extends AsyncTask<Void, Void, List> {
 
@@ -35,7 +49,20 @@ public class EventActivity extends Activity implements OnClickListener {
 
 		@Override
 		protected List doInBackground(Void... params) {
-			String ozelFeedUrl = "http://sosyalkarinca.wordpress.com/feed/";
+
+			SharedPreferences sp = getSharedPreferences("MyApp",
+					Context.MODE_PRIVATE);
+			Set<String> selectedList = sp.getStringSet("kategori",
+					new TreeSet<String>());
+			String ozelFeedUrl;
+			if (selectedList.size() == 0) {
+				ozelFeedUrl = "http://sosyalkarinca.wordpress.com/feed/";
+			} else {
+				String concat = concatStringsWSep(selectedList, ",");
+				ozelFeedUrl = "http://sosyalkarinca.wordpress.com/category/"
+						+ concat + "/feed/";
+			}
+
 			String rssContent = Downloader.getContent(ozelFeedUrl);
 			List feeds = RssParser.parseFeed(rssContent);
 
@@ -70,9 +97,9 @@ public class EventActivity extends Activity implements OnClickListener {
 		button2.setOnClickListener(this);
 		Button button3 = (Button) findViewById(R.id.button3);
 		button3.setOnClickListener(this);
-		
+
 		new FeedTask().execute();
-		
+
 	}
 
 	@Override
