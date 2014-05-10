@@ -35,13 +35,8 @@
             android:text="Profilim" />
     </LinearLayout>
 
-    <WebView
-        android:id="@+id/etkinlikWeb"
-        android:layout_width="match_parent"
-        android:layout_height="292dp" />
-
     <ListView
-        android:id="@+id/etkinlikList"
+        android:id="@+id/ozelGunlerList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
